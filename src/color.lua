@@ -83,6 +83,78 @@ local function XYZfromLAB(l, a, b)
 	return x*ref_X, y*ref_Y, z*ref_Z
 end
 
+local function OKLABfromXYZ(x, y, z)
+	local matrix1 = {
+	    {0.8189330101, 0.3618667424, -0.1288597137},
+	    {0.0329845436, 0.9293118715, 0.0361456387},
+	    {0.0482003018, 0.2643662691, 0.6338517070}
+	}
+	
+	local matrix2 = {
+	    {0.2104542553, 0.7936177850, -0.0040720468},
+	    {1.9779984951, -2.4285922050, 0.4505937099},
+	    {0.0259040371, 0.7827717662, -0.8086757660}
+	}
+	
+	local xyz = {x, y, z}
+	
+	local function matrixVectorProduct(matrix, vector)
+	    local result = {}
+	    for i = 1, #matrix do
+	        result[i] = 0
+	        for j = 1, #vector do
+	            result[i] = result[i] + matrix[i][j] * vector[j]
+	        end
+	    end
+	    return result
+	end
+	
+	local lms = matrixVectorProduct(matrix1, xyz)
+	for i = 1, #lms do
+	    lms[i] = math.pow(lms[i], 1/3)
+	end
+	
+	local lab = matrixVectorProduct(matrix2, lms)
+	
+	return lab[1], lab[2], lab[3]
+end
+	
+local function XYZfromOKLAB(l, a, b)
+	local matrix1 = {
+	    {1.22701385, -0.55779998, 0.28125615},
+	    {-0.04058018, 1.11225687, -0.07167668},
+	    {-0.07638128, -0.42148198, 1.58616322}
+	}
+	
+	local matrix2 = {
+	    {1, 0.39633779, 0.21580376},
+	    {1.00000001, -0.10556134, -0.06385417},
+	    {1.00000005, -0.08948418, -1.29148554}
+	}
+	
+	local lab = {l, a, b}
+	
+	local function matrixVectorProduct(matrix, vector)
+	    local result = {}
+	    for i = 1, #matrix do
+	        result[i] = 0
+	        for j = 1, #vector do
+	            result[i] = result[i] + matrix[i][j] * vector[j]
+	        end
+	    end
+	    return result
+	end
+	
+	local lms = matrixVectorProduct(matrix2, lab)
+	for i = 1, #lms do
+	    lms[i] = math.pow(lms[i], 3)
+	end
+	
+	local xyz = matrixVectorProduct(matrix1, lms)
+	
+	return xyz[1], xyz[2], xyz[3]
+end
+	
 local function LCHfromLAB(l, a, b)
 	-- l is unchanged
 	local c = math.sqrt(a*a + b*b)
@@ -215,6 +287,22 @@ local function fmt_ass_alpha(a)
 	return ("&H%02X&"):format(a)
 end
 
+local function interp_oklch(t, color_1, color_2)
+	local l1, c1, h1 = LCHfromLAB(OKLABfromXYZ(XYZfromRGB(parse_ass_color(color_1))))
+	local l2, c2, h2 = LCHfromLAB(OKLABfromXYZ(XYZfromRGB(parse_ass_color(color_2))))
+	local l, c, h = interpolateLCh(t, l1, c1, h1, l2, c2, h2)
+	local r, g, b = RGBfromXYZ(XYZfromOKLAB(LABfromLCH(l, c, h)))
+	return fmt_ass_color(r, g, b)
+end
+
+local function interp_oklab(t, color_1, color_2)
+	local l1, a1, b1 = OKLABfromXYZ(XYZfromRGB(parse_ass_color(color_1)))
+	local l2, a2, b2 = OKLABfromXYZ(XYZfromRGB(parse_ass_color(color_2)))
+	local l, a, b = interpolate(t, l1, a1, b1, l2, a2, b2)
+	local r, g, b = RGBfromXYZ(XYZfromOKLAB(l, a, b))
+	return fmt_ass_color(r, g, b)
+end
+
 local function interp_lch(t, color_1, color_2)
 	local l1, c1, h1 = LCHfromLAB(LABfromXYZ(XYZfromRGB(parse_ass_color(color_1))))
 	local l2, c2, h2 = LCHfromLAB(LABfromXYZ(XYZfromRGB(parse_ass_color(color_2))))
@@ -271,6 +359,16 @@ local function fmt_lch(l, c, h)
 	return fmt_ass_color(r, g, b)
 end
 
+local function fmt_oklab(l, a, b)
+	local r, g, b = RGBfromXYZ(XYZfromOKLAB(l, a, b))
+	return fmt_ass_color(r, g, b)
+end
+
+local function fmt_oklch(l, c, h)
+	local r, g, b = RGBfromXYZ(XYZfromOKLAB(LABfromLCH(l, c, h)))
+	return fmt_ass_color(r, g, b)
+end
+
 local function lighten_ass(c, amount)
 	local r, g, b = parse_ass_color(c)
 	r, g, b = lighten(r, g, b, amount, "rgb")
@@ -280,12 +378,16 @@ end
 return {
 	interp_lch = interp_lch,
 	interp_lab = interp_lab,
+	interp_oklab = interp_oklab,
+	interp_oklch = interp_oklch,
 	interp_xyz = interp_xyz,
 	interp_rgb = interp_rgb,
 	fmt_rgb = fmt_rgb,
 	fmt_xyz = fmt_xyz,
 	fmt_lab = fmt_lab,
 	fmt_lch = fmt_lch,
+	fmt_oklab = fmt_oklab,
+	fmt_oklch = fmt_oklch,
 	interp_alpha = interp_alpha,
 	fmt_alpha = fmt_ass_alpha,
 	lighten = lighten_ass,
