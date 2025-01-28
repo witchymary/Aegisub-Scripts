@@ -85,15 +85,15 @@ end
 
 -- TODO: rewrite above functions to use this instead of embedding the constants into the arithmetic
 local function mat_vec_mul(matrix, vector)
-    local result = {}
-    for i = 1, #matrix do
-	local v = 0
-	for j = 1, #vector do
-	    v = v + matrix[i][j] * vector[j]
+	local result = {}
+	for i = 1, #matrix do
+		local v = 0
+		for j = 1, #vector do
+			v = v + matrix[i][j] * vector[j]
+		end
+		result[i] = v
 	end
-	result[i] = v
-    end
-    return result
+	return result
 end
 
 local function vec_pow_inplace(vector, pow)
@@ -104,15 +104,15 @@ end
 
 local function OKLABfromXYZ(x, y, z)
 	local lms_from_xyz = {
-	    {0.8189330101, 0.3618667424, -0.1288597137},
-	    {0.0329845436, 0.9293118715, 0.0361456387},
-	    {0.0482003018, 0.2643662691, 0.6338517070}
+		{0.8189330101, 0.3618667424, -0.1288597137},
+		{0.0329845436, 0.9293118715, 0.0361456387},
+		{0.0482003018, 0.2643662691, 0.6338517070}
 	}
 
 	local lab_from_lms = {
-	    {0.2104542553, 0.7936177850, -0.0040720468},
-	    {1.9779984951, -2.4285922050, 0.4505937099},
-	    {0.0259040371, 0.7827717662, -0.8086757660}
+		{0.2104542553, 0.7936177850, -0.0040720468},
+		{1.9779984951, -2.4285922050, 0.4505937099},
+		{0.0259040371, 0.7827717662, -0.8086757660}
 	}
 
 	local lms = mat_vec_mul(lms_from_xyz, {x, y, z})
@@ -123,15 +123,15 @@ end
 	
 local function XYZfromOKLAB(l, a, b)
 	local xyz_from_lms = {
-	    {1.22701385, -0.55779998, 0.28125615},
-	    {-0.04058018, 1.11225687, -0.07167668},
-	    {-0.07638128, -0.42148198, 1.58616322}
+		{1.22701385, -0.55779998, 0.28125615},
+		{-0.04058018, 1.11225687, -0.07167668},
+		{-0.07638128, -0.42148198, 1.58616322}
 	}
 
 	local lms_from_lab = {
-	    {1, 0.39633779, 0.21580376},
-	    {1.00000001, -0.10556134, -0.06385417},
-	    {1.00000005, -0.08948418, -1.29148554}
+		{1, 0.39633779, 0.21580376},
+		{1.00000001, -0.10556134, -0.06385417},
+		{1.00000005, -0.08948418, -1.29148554}
 	}
 	
 	local lms = mat_vec_mul(lms_from_lab, {l, a, b})
