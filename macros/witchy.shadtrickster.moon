@@ -45,8 +45,10 @@ main = (sub, sel) ->
         
             alpha = if alpha_last
                 tags.alpha\getTagParams!
-            else
+            elseif not previous_alpha or tags.alpha1
                 (tags.alpha1 or (data\getDefaultTags!).tags.alpha1)\getTagParams!
+            else
+                previous_alpha
             
             if not previous_alpha
                 table.insert tags_to_insert, ASS\createTag("alpha", 0xFF)
