@@ -1,6 +1,6 @@
 export script_name = "ShadTrickster"
 export script_description = "*Shadtricks Your Lines*"
-export script_version = "0.1.0"
+export script_version = "0.1.1"
 export script_author = "witchymary"
 export script_namespace = "witchy.shadtrickster"
 
