@@ -1,11 +1,12 @@
 export script_name = "ShadTrickster"
 export script_description = "*Shadtricks Your Lines*"
-export script_version = "0.1.1"
+export script_version = "0.1.2"
 export script_author = "witchymary"
 export script_namespace = "witchy.shadtrickster"
 
 DependencyControl = require "l0.DependencyControl"
 depctrl = DependencyControl{
+    feed = "https://raw.githubusercontent.com/witchymary/Aegisub-Scripts/main/DependencyControl.json",
   {
     {"a-mo.LineCollection", version: "1.3.0", url: "https://github.com/TypesettingTools/Aegisub-Motion",
       feed: "https://raw.githubusercontent.com/TypesettingTools/Aegisub-Motion/DepCtrl/DependencyControl.json"},
