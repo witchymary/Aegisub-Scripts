@@ -1,6 +1,6 @@
 export script_name = "ShadTrickster"
 export script_description = "*Shadtricks Your Lines*"
-export script_version = "0.1.3"
+export script_version = "0.1.4"
 export script_author = "witchymary"
 export script_namespace = "witchy.shadtrickster"
 
@@ -31,11 +31,15 @@ main = (sub, sel) ->
 
             tags_to_insert = { }            
             
-            alpha_last = false
+            alpha = if not previous_alpha or tags.alpha1
+                (tags.alpha1 or (data\getDefaultTags!).tags.alpha1)\getTagParams!
+            else
+                previous_alpha
+
             for i = #section.tags, 1, -1
                 tag = section.tags[i]\toString!
                 if tag\find "alpha"
-                    alpha_last = true
+                    alpha = tags.alpha\getTagParams!
                     break
                 elseif tag\find "1a"
                     break
@@ -43,13 +47,6 @@ main = (sub, sel) ->
             if not previous_alpha or tags.color1
                 color_params = { (tags.color1 or (data\getDefaultTags!).tags.color1)\getTagParams! }
                 table.insert tags_to_insert, ASS\createTag("color4", unpack color_params)
-        
-            alpha = if alpha_last
-                tags.alpha\getTagParams!
-            elseif not previous_alpha or tags.alpha1
-                (tags.alpha1 or (data\getDefaultTags!).tags.alpha1)\getTagParams!
-            else
-                previous_alpha
             
             if not previous_alpha
                 table.insert tags_to_insert, ASS\createTag("alpha", 0xFF)

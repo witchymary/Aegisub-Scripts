@@ -20,21 +20,22 @@
       "description": "*Shadtricks Your Lines*",
       "channels": {
         "main": {
-          "version": "0.1.3",
+          "version": "0.1.4",
           "released": "2025-11-24",
           "default": true,
           "files": [
             {
               "name": ".moon",
               "url": "@{fileBaseUrl}@{fileName}",
-              "sha1": "d9621acc4f0d574bac0d95605b3db9fb84dd67b6"
+              "sha1": "84905ca47bd37a44c14d1d8a54e8206a0295b6dc"
             }
           ]
         }
       },
       "changelog": {
         "0.1.2": ["Initial release"],
-        "0.1.3": ["Use shad 0.001 for better rounding accuracy"]
+        "0.1.3": ["Use shad 0.001 for better rounding accuracy"],
+        "0.1.4": ["Refactor alpha assignment"]
       }
     }
   }
