@@ -1,6 +1,6 @@
 export script_name = "ShadTrickster"
 export script_description = "*Shadtricks Your Lines*"
-export script_version = "0.1.2"
+export script_version = "0.1.3"
 export script_author = "witchymary"
 export script_namespace = "witchy.shadtrickster"
 
@@ -54,7 +54,7 @@ main = (sub, sel) ->
             if not previous_alpha
                 table.insert tags_to_insert, ASS\createTag("alpha", 0xFF)
                 table.insert tags_to_insert, ASS\createTag("alpha4", alpha)
-                table.insert tags_to_insert, ASS\createTag("shadow", 0.01)
+                table.insert tags_to_insert, ASS\createTag("shadow", 0.001)
                 table.insert tags_to_insert, ASS\createTag("k_bord", 0)
             elseif previous_alpha ~= alpha
                 table.insert tags_to_insert, ASS\createTag("alpha4", alpha)
