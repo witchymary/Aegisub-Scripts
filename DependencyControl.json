@@ -38,6 +38,30 @@
         "0.1.4": ["Refactor alpha assignment"],
         "0.1.5": ["Replace shad with xshad for marginal performance gain"]
       }
+    },
+    "witchy.cliptoperspective": {
+      "fileBaseUrl": "@{fileBaseUrl}/@{channel}/macros/@{namespace}",
+      "url": "@{baseUrl}#@{namespace}",
+      "author": "witchymary",
+      "name": "Clip to Perspective",
+      "description": "Converts a 4-point vector clip into ambient plane data and perspective tags",
+      "channels": {
+        "main": {
+          "version": "0.1.0",
+          "released": "2026-03-28",
+          "default": true,
+          "files": [
+            {
+              "name": ".moon",
+              "url": "@{fileBaseUrl}@{fileName}",
+              "sha1": "ee8f1aadeb33822375e9c354d464b057d0235689"
+            }
+          ]
+        }
+      },
+      "changelog": {
+        "0.1.0": ["Initial release"]
+      }
     }
   }
 }
