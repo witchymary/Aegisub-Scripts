@@ -1,7 +1,7 @@
 export script_name = "Clip to Perspective"
 export script_description = "Converts a 4-point vector clip into ambient plane data and perspective tags"
 export script_author = "witchymary"
-export script_version = "0.1.0"
+export script_version = "0.1.1"
 export script_namespace = "witchy.cliptoperspective"
 
 DependencyControl = require "l0.DependencyControl"
@@ -72,7 +72,7 @@ cleanupTags = (data) ->
     data\cleanTags 4
 
 
-clip_to_plane = (subs, sel) ->
+clipToPlane = (subs, sel) ->
     -- Validation taken from Perspective Motion
     -- https://github.com/TypesettingTools/arch1t3cht-Aegisub-Scripts/blob/acbc0046432b84cf9e5f4eb8e65d7d1aeaf95323/macros/arch.PerspectiveMotion.moon#L246
     return logger\fatal "You need to have a video loaded." if aegisub.frame_from_ms(0) == nil
@@ -81,15 +81,15 @@ clip_to_plane = (subs, sel) ->
     
     -- Validation taken from Perspective Motion
     -- https://github.com/TypesettingTools/arch1t3cht-Aegisub-Scripts/blob/acbc0046432b84cf9e5f4eb8e65d7d1aeaf95323/macros/arch.PerspectiveMotion.moon#L39-L47
-    _, videoH = aegisub.video_size!
-    layoutScale = lines.meta.PlayResY / (lines.meta.LayoutResY or videoH)
+    _, video_h = aegisub.video_size!
+    layout_scale = lines.meta.PlayResY / (lines.meta.LayoutResY or video_h)
     
-    if layoutScale != 1 and not complained_about_layout_res[aegisub.file_name! or ""]
+    if layout_scale != 1 and not complained_about_layout_res[aegisub.file_name! or ""]
         complained_about_layout_res[aegisub.file_name! or ""] = true
         if lines.meta.LayoutResY
-            logger\hint("Your file's LayoutResY (#{lines.meta.LayoutResY}) does not match its PlayResY (#{lines.meta.PlayResY}). Unless you know what you're doing you should probably resample to make them match.")
+            logger\warn("Your file's LayoutResY (#{lines.meta.LayoutResY}) does not match its PlayResY (#{lines.meta.PlayResY}). Unless you know what you're doing you should probably resample to make them match.")
         else
-            logger\hint("Your file's PlayResY (#{lines.meta.PlayResY}) does not match your video's height (#{videoH}). You may want to set a LayoutResY for your file.")
+            logger\warn("Your file's PlayResY (#{lines.meta.PlayResY}) does not match your video's height (#{video_h}). You may want to set a LayoutResY for your file.")
 
     lines\runCallback (lines, line, i) ->
         data = ASS\parse line
@@ -139,17 +139,17 @@ clip_to_plane = (subs, sel) ->
 
         tagsFromQuad tagvals,
             rect_at_quad(1, 1),
-            w, h, 2, layoutScale
+            w, h, 2, layout_scale
         tagsFromQuad tagvals,
             rect_at_quad(
                 oldscale.scale_x / tagvals.scale_x.value,
                 oldscale.scale_y / tagvals.scale_y.value
             ),
-            w, h, 2, layoutScale
+            w, h, 2, layout_scale
 
         cleanupTags data
         data\commit!
 
     lines\replaceLines!
 
-depctrl\registerMacro clip_to_plane
+depctrl\registerMacro clipToPlane
