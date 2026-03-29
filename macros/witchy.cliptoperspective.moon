@@ -1,7 +1,7 @@
 export script_name = "Clip to Perspective"
 export script_description = "Converts a 4-point vector clip into ambient plane data and perspective tags"
 export script_author = "witchymary"
-export script_version = "0.1.1"
+export script_version = "0.1.2"
 export script_namespace = "witchy.cliptoperspective"
 
 DependencyControl = require "l0.DependencyControl"
@@ -34,37 +34,37 @@ cleanupTags = (data) ->
     defaults = data\getDefaultTags!.tags
     tags = data\getEffectiveTags(1, false, false, false).tags
 
-    tagMatchesDefault = (tagName) ->
-        tag = tags[tagName]
+    tagMatchesDefault = (tag_name) ->
+        tag = tags[tag_name]
         return false unless tag
-        default_tag = defaults[tagName]
+        default_tag = defaults[tag_name]
         return false unless default_tag
         tag\getTagParams! == default_tag\getTagParams!
 
-    tagsToRemove = { }
-    for tagName in *{ "scale_x", "scale_y", "angle", "angle_x", "angle_y",
+    tags_to_remove = { }
+    for tag_name in *{ "scale_x", "scale_y", "angle", "angle_x", "angle_y",
                       "align", "fontsize", "shear_x", "shear_y", "outline", 
                       "shadow" }
-        if tagMatchesDefault tagName
-            table.insert tagsToRemove, tagName
+        if tagMatchesDefault tag_name
+            table.insert tags_to_remove, tag_name
 
-    data\removeTags tagsToRemove unless #tagsToRemove == 0
+    data\removeTags tags_to_remove unless #tags_to_remove == 0
 
     collapseAxisTags = (bitag) ->
-        tagX = "#{bitag}_x"
-        tagY = "#{bitag}_y"
-        tx, ty = tags[tagX], tags[tagY]
+        tag_x = "#{bitag}_x"
+        tag_y = "#{bitag}_y"
+        tx, ty = tags[tag_x], tags[tag_y]
         return unless tx and ty
         vx, vy = tx\getTagParams!, ty\getTagParams!
         if vx == vy
-            data\removeTags {tagX, tagY}
+            data\removeTags {tag_x, tag_y}
             if vx != 0
                 tag = defaults[bitag]\copy!
                 tag\setTagParams vx
                 data\insertTags tag
         else
-            data\removeTags tagX if vx == 0
-            data\removeTags tagY if vy == 0
+            data\removeTags tag_x if vx == 0
+            data\removeTags tag_y if vy == 0
 
     collapseAxisTags "outline"
     collapseAxisTags "shadow"

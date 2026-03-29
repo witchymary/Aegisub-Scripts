@@ -47,21 +47,22 @@
       "description": "Converts a 4-point vector clip into ambient plane data and perspective tags",
       "channels": {
         "main": {
-          "version": "0.1.1",
+          "version": "0.1.2",
           "released": "2026-03-28",
           "default": true,
           "files": [
             {
               "name": ".moon",
               "url": "@{fileBaseUrl}@{fileName}",
-              "sha1": "c619c10fbce4436616d628eb0a65085e11838a66"
+              "sha1": "80ec4520dfe17ddd629d9b3e4c28ab288ef31f86"
             }
           ]
         }
       },
       "changelog": {
         "0.1.0": ["Initial release"],
-        "0.1.1": ["Code style consistency"]
+        "0.1.1": ["Code style consistency"],
+        "0.1.2": ["Further style changes"]
       }
     }
   }
