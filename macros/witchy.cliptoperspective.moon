@@ -1,7 +1,7 @@
 export script_name = "Clip to Perspective"
 export script_description = "Converts a 4-point vector clip into ambient plane data and perspective tags"
 export script_author = "witchymary"
-export script_version = "0.1.2"
+export script_version = "0.1.3"
 export script_namespace = "witchy.cliptoperspective"
 
 DependencyControl = require "l0.DependencyControl"
@@ -58,13 +58,13 @@ cleanupTags = (data) ->
         vx, vy = tx\getTagParams!, ty\getTagParams!
         if vx == vy
             data\removeTags {tag_x, tag_y}
-            if vx != 0
+            if vx != defaults[bitag]\getTagParams!
                 tag = defaults[bitag]\copy!
                 tag\setTagParams vx
                 data\insertTags tag
         else
-            data\removeTags tag_x if vx == 0
-            data\removeTags tag_y if vy == 0
+            data\removeTags tag_x if vx == defaults[bitag]\getTagParams!
+            data\removeTags tag_y if vy == defaults[bitag]\getTagParams!
 
     collapseAxisTags "outline"
     collapseAxisTags "shadow"
