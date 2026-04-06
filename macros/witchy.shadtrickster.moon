@@ -1,6 +1,6 @@
 export script_name = "ShadTrickster"
 export script_description = "*Shadtricks Your Lines*"
-export script_version = "0.2.1"
+export script_version = "0.2.2"
 export script_author = "witchymary"
 export script_namespace = "witchy.shadtrickster"
 
@@ -47,13 +47,13 @@ process_tag_section = (default_tags, section, previous_alpha) ->
         table.insert tags_to_insert, ASS\createTag("alpha4", alpha)
         table.insert tags_to_insert, ASS\createTag("shadow_x", 0.001)
         table.insert tags_to_insert, ASS\createTag("k_bord", 0)
-    elseif previous_alpha ~= alpha
+    elseif previous_alpha ~= alpha and (tags.alpha1 or tags.alpha)
         table.insert tags_to_insert, ASS\createTag("alpha4", alpha)
 
     section\removeTags {"alpha", "alpha1", "alpha3", "alpha4", "color1", "color3",
                         "color4", "k_bord", "shadow", "shadow_x", "shadow_y"}
 
-    section\insertTags tags_to_insert
+    section\insertTags tags_to_insert, 1
 
     alpha
 
