@@ -1,6 +1,6 @@
 export script_name = "ShadTrickster"
 export script_description = "*Shadtricks Your Lines*"
-export script_version = "0.2.0"
+export script_version = "0.2.1"
 export script_author = "witchymary"
 export script_namespace = "witchy.shadtrickster"
 
@@ -22,11 +22,13 @@ process_tag_section = (default_tags, section, previous_alpha) ->
 
     tags_to_insert = { }
 
-    alpha = if not previous_alpha or tags.alpha1
+    alpha = if not previous_alpha or tags.alpha1 or previous_alpha == -1
         (tags.alpha1 or default_tags.alpha1)\getTagParams!
     else
         previous_alpha
-
+    
+    -- Hacky solution to determine whether \alpha or \1a are the last value in the tag block - the canonical one
+    -- The transform is being skipped since it otherwise can mess up with the logic
     for i = #section.tags, 1, -1
         tag_str = section.tags[i]\toString!
         continue if tag_str\find "^\\t"
@@ -66,13 +68,15 @@ main = (sub, sel) ->
         default_tags = (data\getDefaultTags!).tags
 
         data\callback ((section) ->
-
             previous_alpha = process_tag_section default_tags, section, previous_alpha
 
-            -- Process any transforms embedded in this section.
-            -- Each transform's .tags field is its own inner ASS.Section.Tag.
+            -- Process any transforms embedded in this section
+            -- Each transform's .tags field is its own inner ASS.Section.Tag
+            -- If the transform has alpha, ensure previous_alpha fails a condition in process_tag_section
             section\callback ((tag) ->
-                previous_alpha = process_tag_section default_tags, tag.tags, previous_alpha
+                has_alpha = #tag.tags\getTags({"alpha", "1a"}) > 0
+                process_tag_section default_tags, tag.tags, previous_alpha
+                previous_alpha = -1 if has_alpha
             ), "transform"
 
             nil
