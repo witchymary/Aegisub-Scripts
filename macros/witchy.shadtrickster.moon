@@ -1,6 +1,6 @@
 export script_name = "ShadTrickster"
 export script_description = "*Shadtricks Your Lines*"
-export script_version = "0.1.5"
+export script_version = "0.2.0"
 export script_author = "witchymary"
 export script_namespace = "witchy.shadtrickster"
 
@@ -15,58 +15,70 @@ depctrl = DependencyControl{
   }
 }
 LineCollection, ASS = depctrl\requireModules!
-logger = depctrl\getLogger!
+
+
+process_tag_section = (default_tags, section, previous_alpha) ->
+    tags = (section\getEffectiveTags false, false, false).tags
+
+    tags_to_insert = { }
+
+    alpha = if not previous_alpha or tags.alpha1
+        (tags.alpha1 or default_tags.alpha1)\getTagParams!
+    else
+        previous_alpha
+
+    for i = #section.tags, 1, -1
+        tag_str = section.tags[i]\toString!
+        continue if tag_str\find "^\\t"
+        if tag_str\find "alpha"
+            alpha = tags.alpha\getTagParams!
+            break
+        elseif tag_str\find "1a"
+            break
+
+    if not previous_alpha or tags.color1
+        color_params = { (tags.color1 or default_tags.color1)\getTagParams! }
+        table.insert tags_to_insert, ASS\createTag("color4", unpack color_params)
+
+    if not previous_alpha
+        table.insert tags_to_insert, ASS\createTag("alpha", 0xFF)
+        table.insert tags_to_insert, ASS\createTag("alpha4", alpha)
+        table.insert tags_to_insert, ASS\createTag("shadow_x", 0.001)
+        table.insert tags_to_insert, ASS\createTag("k_bord", 0)
+    elseif previous_alpha ~= alpha
+        table.insert tags_to_insert, ASS\createTag("alpha4", alpha)
+
+    section\removeTags {"alpha", "alpha1", "alpha3", "alpha4", "color1", "color3",
+                        "color4", "k_bord", "shadow", "shadow_x", "shadow_y"}
+
+    section\insertTags tags_to_insert
+
+    alpha
 
 
 main = (sub, sel) ->
     lines = LineCollection sub, sel
     return if #lines.lines == 0
-    lines\runCallback (lines, line, i) ->
+    lines\runCallback (lines, line) ->
         data = ASS\parse line
-        
+
         local previous_alpha -- also being used to identify the first tag section
+        default_tags = (data\getDefaultTags!).tags
+
         data\callback ((section) ->
 
-            tags = (section\getEffectiveTags false, false, false).tags
+            previous_alpha = process_tag_section default_tags, section, previous_alpha
 
-            tags_to_insert = { }            
-            
-            alpha = if not previous_alpha or tags.alpha1
-                (tags.alpha1 or (data\getDefaultTags!).tags.alpha1)\getTagParams!
-            else
-                previous_alpha
-
-            for i = #section.tags, 1, -1
-                tag = section.tags[i]\toString!
-                if tag\find "alpha"
-                    alpha = tags.alpha\getTagParams!
-                    break
-                elseif tag\find "1a"
-                    break
-            
-            if not previous_alpha or tags.color1
-                color_params = { (tags.color1 or (data\getDefaultTags!).tags.color1)\getTagParams! }
-                table.insert tags_to_insert, ASS\createTag("color4", unpack color_params)
-            
-            if not previous_alpha
-                table.insert tags_to_insert, ASS\createTag("alpha", 0xFF)
-                table.insert tags_to_insert, ASS\createTag("alpha4", alpha)
-                table.insert tags_to_insert, ASS\createTag("shadow_x", 0.001)
-                table.insert tags_to_insert, ASS\createTag("k_bord", 0)
-            elseif previous_alpha ~= alpha
-                table.insert tags_to_insert, ASS\createTag("alpha4", alpha)
-
-            previous_alpha = alpha
-
-            section\removeTags {"alpha", "alpha1", "alpha3", "alpha4", "color1", "color3", 
-                                "color4", "k_bord", "shadow", "shadow_x", "shadow_y"}
-            
-            section\insertTags tags_to_insert
+            -- Process any transforms embedded in this section.
+            -- Each transform's .tags field is its own inner ASS.Section.Tag.
+            section\callback ((tag) ->
+                previous_alpha = process_tag_section default_tags, tag.tags, previous_alpha
+            ), "transform"
 
             nil
 
         ), ASS.Section.Tag
-        
+
         data\cleanTags nil, nil, nil
         data\commit!
     lines\replaceLines!
