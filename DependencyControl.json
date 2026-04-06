@@ -20,14 +20,14 @@
       "description": "*Shadtricks Your Lines*",
       "channels": {
         "main": {
-          "version": "0.2.1",
+          "version": "0.2.2",
           "released": "2026-04-06",
           "default": true,
           "files": [
             {
               "name": ".moon",
               "url": "@{fileBaseUrl}@{fileName}",
-              "sha1": "f3f7468934d40ebe79837e7ab56ecb5c57e87950"
+              "sha1": "5eeeeda914a4c6414bc0e0e8cf00e72538fbfdf3"
             }
           ]
         }
@@ -38,7 +38,8 @@
         "0.1.4": ["Refactor alpha assignment"],
         "0.1.5": ["Replace shad with xshad for marginal performance gain"],
         "0.2.0": ["Refactoring. Add transform support"],
-        "0.2.1": ["Make transform alpha handling more reliable"]
+        "0.2.1": ["Make transform alpha handling more reliable"],
+        "0.2.2": ["Fix a couple of bugs"]
       }
     },
     "witchy.cliptoperspective": {
