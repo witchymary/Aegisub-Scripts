@@ -50,14 +50,14 @@
       "description": "Converts a 4-point vector clip into ambient plane data and perspective tags",
       "channels": {
         "main": {
-          "version": "0.1.3",
+          "version": "0.1.4",
           "released": "2026-04-05",
           "default": true,
           "files": [
             {
               "name": ".moon",
               "url": "@{fileBaseUrl}@{fileName}",
-              "sha1": "5abe9bcacb26f500b7acc5a6be51e44c5568d5eb"
+              "sha1": "9fcdeb0316fe795fbf8b3301a147532411b9ddf3"
             }
           ]
         }
@@ -66,7 +66,8 @@
         "0.1.0": ["Initial release"],
         "0.1.1": ["Code style consistency"],
         "0.1.2": ["Further style changes"],
-        "0.1.3": ["Do not assume outline value is zero"]
+        "0.1.3": ["Do not assume outline value is zero"],
+        "0.1.4": ["Remove obsolete warning about LayoutRes mismatch"]
       }
     }
   }
