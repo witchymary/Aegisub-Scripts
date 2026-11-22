@@ -69,6 +69,30 @@
         "0.1.3": ["Do not assume outline value is zero"],
         "0.1.4": ["Remove obsolete warning about LayoutRes mismatch"]
       }
+    },
+    "witchy.allrounder": {
+      "fileBaseUrl": "@{fileBaseUrl}/@{channel}/macros/@{namespace}",
+      "url": "@{baseUrl}#@{namespace}",
+      "author": "witchymary",
+      "name": "All-Rounder",
+      "description": "Round tag coordinates and drawings",
+      "channels": {
+        "main": {
+          "version": "0.1.0",
+          "released": "2026-11-22",
+          "default": true,
+          "files": [
+            {
+              "name": ".moon",
+              "url": "@{fileBaseUrl}@{fileName}",
+              "sha1": "5b741eea9e0728e801ad41de9f3f862a8a1ee3de"
+            }
+          ]
+        }
+      },
+      "changelog": {
+        "0.1.0": ["Initial release"]
+      }
     }
   }
 }
