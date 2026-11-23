@@ -78,20 +78,21 @@
       "description": "Round tag coordinates and drawings",
       "channels": {
         "main": {
-          "version": "0.1.0",
+          "version": "0.1.1",
           "released": "2026-11-22",
           "default": true,
           "files": [
             {
               "name": ".moon",
               "url": "@{fileBaseUrl}@{fileName}",
-              "sha1": "5b741eea9e0728e801ad41de9f3f862a8a1ee3de"
+              "sha1": "b07c14ed85c6e534bce7a2618efba3a2199cac3e"
             }
           ]
         }
       },
       "changelog": {
-        "0.1.0": ["Initial release"]
+        "0.1.0": ["Initial release"],
+        "0.1.1": ["Update description"]
       }
     }
   }

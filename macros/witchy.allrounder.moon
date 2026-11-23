@@ -1,7 +1,7 @@
 export script_name = "All-Rounder"
-export script_description = "Round tag coordinates and drawings"
+export script_description = "Round tag and drawing coordinates to the nearest integer or up to two decimal places"
 export script_author = "witchymary"
-export script_version = "0.1.0"
+export script_version = "0.1.1"
 export script_namespace = "witchy.allrounder"
 
 DependencyControl = require "l0.DependencyControl"
@@ -47,7 +47,7 @@ round_tag_section = (section, decimals = 0) ->
         p = { tag\getTagParams! }
         tag\set round_to(p[1], decimals), round_to(p[2], decimals), round_to(p[3], decimals), round_to(p[4], decimals), p[5] or 0, p[6] or 0
 
-    -- Rectangular clips are truncated to integers
+    -- libass truncates rectangular clips to integers
     for tag in *section\getTags { "clip_rect", "iclip_rect" }
         x1, y1, x2, y2 = tag\getTagParams!
         tag\set (math.modf x1), (math.modf y1), (math.modf x2), (math.modf y2)
